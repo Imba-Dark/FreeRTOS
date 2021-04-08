@@ -76,3 +76,31 @@ void vListInsert(List_t * const pxList, ListItem_t * const pxNewListItem)
 	/*链表结点计数器 ++*/
 	(pxList->uxNmberOfItems)++;
 }
+
+/*将节点从链表删除*/
+UBase_Type_t uxListRemove(ListItem_t * const pxItemToRemove)
+{
+	/*获取节点所在的链表*/
+	List_t * const pxList = (List_t *) pxItemToRemove->pvContainer;
+	
+	/*将指定的节点从链表删除*/
+	pxItemToRemove->pxNext->pxPrevious	=	pxItemToRemove->pxPrevious;
+	pxItemToRemove->pxPrevious->pxNext	=	pxItemToRemove->pxNext;
+	
+	/*调整链表的节点索引指针*/
+	if(pxList->pxIndex	==	pxItemToRemove)
+	{
+		pxList->pxIndex	=	pxItemToRemove->pxPrevious;
+	}
+	
+	/*初始化该节点所在的链表为空，表示节点还没有插入任何链表*/
+	pxItemToRemove->pvContainer = NULL;
+	
+	/*链表节点计数器 --*/
+	(pxList->uxNmberOfItems)--;
+	
+	/*返回链表中剩余节点的个数*/
+	return pxList->uxNmberOfItems;
+}
+
+
